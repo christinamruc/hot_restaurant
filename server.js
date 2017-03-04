@@ -18,7 +18,7 @@ app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
 // Table Data (DATA)
 // =============================================================
-var tables = [{
+var reservations = [{
   name: "Yoda",
   phoneNumber: 8037657898,
   email: "yoda@gmail.com",
@@ -35,7 +35,22 @@ var tables = [{
   uniqueId: "billybob"
 }];
 
-var waitList = [];
+var waitList = [{
+  name: "Bill",
+  phoneNumber: 8037657898,
+  email: "bill@gmail.com",
+  uniqueId: "bill"
+}, {
+  name: "Jill",
+  phoneNumber: 8037657898,
+  email: "jill@gmail.com",
+  uniqueId: "Jill"
+}, {
+  name: "Bob",
+  phoneNumber: 8037657898,
+  email: "bob@gmail.com",
+  uniqueId: "bob"
+}];
 
 // Routes
 // =============================================================
@@ -54,22 +69,42 @@ app.get("/reservation", function(req, res) {
 });
 
 // Search for Specific Character (or all characters) - provides JSON
-app.get("/api/:tables?", function(req, res) {
+app.get("/api/:tables", function(req, res) {
   var guest = req.params.tables;
 
-  if (guest) {
-    console.log(guest);
+  if (tables){
+    fs.readFile("tableData.txt", function (err, data) {
 
-    for (var i = 0; i < tables.length; i++) {
-      if (guest === tables[i].routeName) {
-        return res.json(tables[i]);
-      }
-    }
+      data = JSON.parse(data);
 
-    return res.json(false);
+       if (err) {
+           console.log(err);
+       } else {
+          for (var i = 0; i < data.length; i++) {
+            console.log("Guests: " + data[i].uniqueId);
+          }
+       }
+    });
   }
-  return res.json(tables)
-  return res.json(waitList);
+
+});
+
+app.get("/api/:waitList", function (req, res) {
+  var waitGuest = req.params.waitList;
+
+  data = JSON.parse(data);
+
+  if (waitGuest){
+    fs.readFile("waitData.txt", function (err, data) {
+       if (err) {
+           console.log(err);
+       } else {
+           for (var i = 0; i < data.length; i++) {
+            console.log("Waitlist: " + data[i].uniqueId);
+          }
+      }
+    });
+  }
 });
 
 // Create New Reservations - takes in JSON input
@@ -82,7 +117,7 @@ app.post("/api/new", function(req, res) {
 
     tables.push(newGuest);
 
-    fs.appendFile("tableData.txt", JSON.stringify(newGuest), function (err) {
+    fs.writeFile("tableData.txt", JSON.stringify(tables), function (err) {
        if (err) {
            console.log(err);
        } else {
@@ -92,7 +127,7 @@ app.post("/api/new", function(req, res) {
   } else {
     waitList.push(newGuest);
 
-    fs.appendFile("tableData.txt", JSON.stringify(newGuest), function (err) {
+    fs.writeFile("waitData.txt", JSON.stringify(waitList), function (err) {
        if (err) {
            console.log(err);
        } else {

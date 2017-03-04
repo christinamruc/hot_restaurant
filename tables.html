@@ -59,6 +59,32 @@
 
 	</div>
 
+	<script type="text/javascript">
+
+    $.get("/api/:tables", function(data) {
+      for (var i = 0; i < data.length; i++) {
+        var wellSection = $("<div>");
+        wellSection.addClass("well");
+        wellSection.attr("id", "character-well-" + i);
+        $("#well-section").append(wellSection);
+        $("#character-well-" + i).append("<h2>Name: " + data[i].uniqueId + "</h2>");
+        $("#tableSection").append("#well-selection");
+      }
+    });
+
+    $.get("/api/:waitGuest", function(data) {
+      for (var i = 0; i < data.length; i++) {
+        var wellSection = $("<div>");
+        wellSection.addClass("well");
+        wellSection.attr("id", "character-well-" + i);
+        $("#well-section").append(wellSection);
+        $("#character-well-" + i).append("<h2>Name: " + data[i].uniqueId + "</h2>");
+        $("#waitListSection").append("#well-selection");
+      }
+    });
+
+  </script>
+
 </body>
 
 </html>
